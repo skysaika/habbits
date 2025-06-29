@@ -1,5 +1,7 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from app_users.models import User
 from app_users.serializers import RegisterSerializer, UserProfileSerializer
 
 class RegisterView(generics.CreateAPIView):
@@ -7,8 +9,9 @@ class RegisterView(generics.CreateAPIView):
     Вью для регистрации нового пользователя.
     Доступна без авторизации.
     """
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """

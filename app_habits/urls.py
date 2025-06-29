@@ -10,5 +10,5 @@ router = DefaultRouter()
 router.register('habits', HabitViewSet, basename='habits')
 
 urlpatterns = [
-    path('', include(router.urls)),
-]
+
+] + router.urls
