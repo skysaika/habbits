@@ -8,7 +8,12 @@ class User(AbstractUser):
     tg_chat_id = models.CharField(max_length=50, unique=True, null=True, blank=True, verbose_name='ID в телеграме')
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["tg_username"]
+    REQUIRED_FIELDS = []
 
-    def str(self):
+    def __str__(self):
         return self.email
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ['email']

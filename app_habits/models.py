@@ -35,23 +35,36 @@ class Habit(models.Model):
     def clean(self):
         """
         Валидация модели:
-        - нельзя одновременно заполнять related_habit и reward
+        - нельзя одновременно указывать related_habit и reward
         - время выполнения <= 120 секунд
         - периодичность >= 7 дней
         - у приятной привычки не может быть related_habit или reward
         """
+        errors = {}
+
         if self.related_habit and self.reward:
-            raise ValidationError("Нельзя одновременно указывать связанную привычку и вознаграждение.")
+            errors['reward'] = 'Нельзя одновременно указывать связанную привычку и вознаграждение.'
+            errors['related_habit'] = 'Нельзя одновременно указывать связанную привычку и вознаграждение.'
 
         if self.duration_seconds > 120:
-            raise ValidationError("Время выполнения не может превышать 120 секунд.")
+            errors['duration_seconds'] = 'Время выполнения не может превышать 120 секунд.'
 
         if self.periodicity < 7:
-            raise ValidationError("Периодичность должна быть не меньше 7 дней.")
+            errors['periodicity'] = 'Периодичность должна быть не меньше 7 дней.'
 
         if self.is_pleasant:
-            if self.reward or self.related_habit:
-                raise ValidationError("У приятной привычки не может быть вознаграждения или связанной привычки.")
+            if self.reward:
+                errors['reward'] = 'У приятной привычки не может быть вознаграждения.'
+            if self.related_habit:
+                errors['related_habit'] = 'У приятной привычки не может быть связанной привычки.'
 
-    def str(self):
+        if errors:
+            raise ValidationError(errors)
+
+    def __str__(self):
         return f"{self.action} в {self.time} @ {self.place}"
+
+    class Meta:
+        verbose_name = 'Привычка'
+        verbose_name_plural = 'Привычки'
+        ordering = ['time']

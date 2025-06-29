@@ -8,7 +8,7 @@ class HabitSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Habit
-        fields = 'all'
+        fields = '__all__'
         read_only_fields = ('user',)
 
     def validate(self, data):
@@ -18,3 +18,10 @@ class HabitSerializer(serializers.ModelSerializer):
         instance = Habit(**data)
         instance.clean()
         return data
+
+    def create(self, validated_data):
+        """
+        Автоматически добавляем пользователя из контекста запроса.
+        """
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
