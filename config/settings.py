@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -168,6 +170,13 @@ SIMPLE_JWT = {
 
 CELERY_BROKER_URL = os.getenv('REDIS_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+
+CELERY_BEAT_SCHEDULE = {
+    'poll-telegram-updates-every-30-seconds': {
+        'task': 'app_notifications.tasks.poll_telegram_updates',
+        'schedule': 30.0,
+    },
+}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Habit Tracker API',
