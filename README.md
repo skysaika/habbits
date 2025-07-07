@@ -1,118 +1,91 @@
-# 🧠 Habit Tracker (Django + Telegram + Celery)
+🧠 Habit Tracker (Django + Telegram + Celery)
+Этот проект — трекер полезных привычек с возможностью получать напоминания через Telegram.
 
-Этот проект — это трекер полезных привычек с возможностью получать напоминания в Telegram.
+📌 Функциональность
+Регистрация и аутентификация пользователей (JWT)
 
-## 📌 Функциональность
+Создание и отслеживание привычек
 
-- Регистрация и аутентификация пользователей (JWT)
-- Создание и отслеживание привычек
-- Telegram-бот с командой `/start` для активации напоминаний
-- Отправка напоминаний через Celery
-- Периодический опрос Telegram через Celery Beat
-- Документация API через Swagger и Spectacular
+Telegram-бот с командой /start для активации напоминаний
 
----
+Отправка напоминаний асинхронно через Celery
 
-## 🚀 Стек технологий
+Периодический опрос Telegram через Celery Beat
 
-- Python 3.12
-- Django 5
-- PostgreSQL
-- Redis
-- Celery
-- Django REST Framework
-- Telegram Bot API
-- Django-Celery-Beat
-- Poetry
+Документация API через Swagger и DRF Spectacular
 
----
+🚀 Стек технологий
+Python 3.13
 
-## 🔧 Установка и запуск
+Django 5
 
-### 1. Клонируй репозиторий:
+PostgreSQL
 
-```bash
-git clone https://github.com/yourname/habit-tracker.git
-cd habit-tracker
-```
+Redis
 
-### 2. Установи зависимости через Poetry
+Celery и Celery Beat
 
-```bash
-poetry install
-```
+Django REST Framework
 
-### 3. Создай `.env` файл
+Telegram Bot API
 
-```env
-SECRET_KEY=your-secret-key
+Poetry для управления зависимостями
+
+🔧 Установка и запуск
+
+1. Клонировать репозиторий(указан путь для ключа SSH)
+git clone git@github.com:skysaika/habbits.git
+cd habbits
+
+2. Создать файл .env(пример в .env.example)
+В корне проекта создайте файл .env и укажите необходимые переменные окружения (значения заменить на свои):
+SECRET_KEY=ваш-секретный-ключ
 DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-POSTGRES_KEY=your_db_password
+ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0,0.0.0.0:8000
+POSTGRES_DB=имя_базы_данных
+POSTGRES_USER=пользователь_базы
+POSTGRES_PASSWORD=пароль_базы
 REDIS_URL=redis://localhost:6379
-TELEGRAM_BOT_TOKEN=your_telegram_token
-```
+TELEGRAM_BOT_TOKEN=токен_вашего_бота
 
-### 4. Примени миграции
+3. Установить зависимости через Poetry:
+    poetry install
 
-```bash
-poetry run python manage.py migrate
-```
+4. Применить миграции базы данных
+poetry run python manage.py migrate 
 
-### 5. Запусти сервер
-
-```bash
+5. Запустить локально сервер разработки
 poetry run python manage.py runserver
-```
 
----
-
-## ⚙️ Celery и Beat
-
-### Запуск Celery worker
-
-```bash
+🐳 Запуск через Docker Compose
+1. Собрать и запустить контейнеры
+sudo docker compose build --no-cache
+sudo docker compose up -d
+2. Просмотреть логи веб-сервиса
+sudo docker compose logs -f web
+3. Перейти в браузере по адресу http://localhost:8000
+4. Остановить и удалить контейнеры и тома:
+sudo docker-compose down -v
+⚙️ Celery и Celery Beat
+Запуск Celery worker
 poetry run celery -A config worker -l info
-```
-
-### Запуск Celery Beat
-
-```bash
+Запуск Celery Beat
 poetry run celery -A config beat -l info
-```
+📲 Использование Telegram бота
+Найдите вашего бота по имени в Telegram.
 
----
+Отправьте команду /start для активации напоминаний.
 
-## 📲 Telegram бот
+Бот сохранит ваш chat_id, если ваш Telegram username совпадает с зарегистрированным в системе.
 
-- Найди своего бота по имени в Telegram.
-- Напиши `/start`, чтобы активировать напоминания.
-- Бот сохранит `chat_id`, если ты зарегистрирован с тем же `tg_username`.
-
----
-
-## 🔁 Планировщик задач
-
-Для запуска периодической отправки напоминаний:
-
-```bash
+🔁 Периодические задачи
+Для запуска планировщика напоминаний:
 poetry run python manage.py schedule_reminders
-```
 
-Для теста получения сообщений вручную:
-
-```bash
+Для ручного опроса Telegram:
 poetry run python manage.py poll_telegram
-```
 
----
-
-## 🧪 Тестирование
-
-```bash
+🧪 Тестирование
 poetry run pytest
-```
-
-## 📄 Лицензия
-
-MIT License
+📄 Лицензия
+Проект распространяется под лицензией MIT.
